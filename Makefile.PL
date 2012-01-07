@@ -9,6 +9,7 @@ WriteMakefile
                    'Carp' => 0,
                    'Clone' => 0,
                    'Perl6::Export::Attrs' => 0,
+                   'Scalar::Util' => 0,
                    'Test::Differences' => 0,
                    'Test::More' => 0,
                    'Test::NoWarnings' => '1.03',
