@@ -1,10 +1,13 @@
 Build.PL
 Changes
+example/01_oo_style.pl
+example/02_functional_style.pl
 lib/Hash/Map.pm
 MANIFEST			This list of files
 README
 t/01_oo_style.t
 t/02_functional_style.t
+t/11_test_examples.t
 t/chars.t
 t/perl_critic.t
 t/pod.t
