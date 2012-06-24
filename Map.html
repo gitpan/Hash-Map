@@ -1,0 +1,882 @@
+<?xml version="1.0" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<!-- saved from url=(0017)http://localhost/ -->
+<script language="JavaScript" src="../../../displayToc.js"></script>
+<script language="JavaScript" src="../../../tocParas.js"></script>
+<script language="JavaScript" src="../../../tocTab.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../scineplex.css">
+<title>Hash::Map - Manipulate hashes map like</title>
+<link rel="stylesheet" href="../../../Active.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<script>writelinks('__top__',3);</script>
+<h1><a>Hash::Map - Manipulate hashes map like</a></h1>
+<p><a name="__index__"></a></p>
+
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#version">VERSION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<ul>
+
+		<li><a href="#hint">Hint</a></li>
+		<li><a href="#oo_style">OO style</a></li>
+		<li><a href="#automatic_construction">Automatic construction</a></li>
+		<li><a href="#functional_style">Functional style</a></li>
+	</ul>
+
+	<li><a href="#example">EXAMPLE</a></li>
+	<li><a href="#code_example">Code example</a></li>
+	<ul>
+
+		<li><a href="#oo_interface">OO interface</a></li>
+		<li><a href="#functional_interface">Functional interface</a></li>
+	</ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#subroutines_methods">SUBROUTINES/METHODS</a></li>
+	<ul>
+
+		<li><a href="#method_new">method new</a></li>
+		<li><a href="#method_target__target_ref__set_target_and_set_target_ref">method target, target_ref, set_target and set_target_ref</a></li>
+		<li><a href="#method_source__source_ref__set_source_and_set_source_ref">method source, source_ref, set_source and set_source_ref</a></li>
+		<li><a href="#method_combine">method combine</a></li>
+		<li><a href="#method_clone_target">method clone_target</a></li>
+		<li><a href="#method_clone_source">method clone_source</a></li>
+		<li><a href="#method_delete_keys_and_delete_keys_ref">method delete_keys and delete_keys_ref</a></li>
+		<li><a href="#method_copy_keys_and_copy_keys_ref">method copy_keys and copy_keys_ref</a></li>
+		<li><a href="#method_map_keys_and_map_keys_ref">method map_keys and map_keys_ref</a></li>
+		<li><a href="#method_merge_hash_and_merge_hashref">method merge_hash and merge_hashref</a></li>
+		<li><a href="#method_modify_and_modify_ref">method modify and modify_ref</a></li>
+		<li><a href="#method_copy_modify_and_copy_modify_ref">method copy_modify and copy_modify_ref</a></li>
+		<li><a href="#method_copy_modify_identical_and_copy_modify_identical_ref">method copy_modify_identical and copy_modify_identical_ref</a></li>
+		<li><a href="#method_map_modify_and_map_modify_ref">method map_modify and map_modify_ref</a></li>
+		<li><a href="#method_map_modify_identical_and_map_modify_identical_ref">method map_modify_identical and map_modify_identical_ref</a></li>
+		<li><a href="#subroutine_hash_map">subroutine hash_map</a></li>
+		<li><a href="#subroutine_hashref_map">subroutine hashref_map</a></li>
+	</ul>
+
+	<li><a href="#diagnostics">DIAGNOSTICS</a></li>
+	<li><a href="#configuration_and_environment">CONFIGURATION AND ENVIRONMENT</a></li>
+	<li><a href="#dependencies">DEPENDENCIES</a></li>
+	<li><a href="#incompatibilities">INCOMPATIBILITIES</a></li>
+	<li><a href="#bugs_and_limitations">BUGS AND LIMITATIONS</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#license_and_copyright">LICENSE AND COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>Hash::Map - Manipulate hashes map like</p>
+<p>
+</p>
+<hr />
+<h1><a name="version">VERSION</a></h1>
+<p>0.007</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>
+</p>
+<h2><a name="hint">Hint</a></h2>
+<p>When I write</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">this_method</span><span class="operator">;</span>
+</pre>
+<p>I mean, that the Hash::Map object itself will be returned.
+So it is possible to build chains like that:</p>
+<pre>
+    <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">this_method</span><span class="operator">-&gt;</span><span class="variable">next_method</span><span class="operator">;</span>
+</pre>
+<p>It is typical used for setter or worker methods.</p>
+<p>
+</p>
+<h2><a name="oo_style">OO style</a></h2>
+<pre>
+    <span class="keyword">require</span> <span class="variable">Hash::Map</span><span class="operator">;</span>
+</pre>
+<pre>
+    <span class="comment"># The constructor "new" is typical not called directly.</span>
+    <span class="comment"># Methods "target", "set_target", "target_ref",</span>
+    <span class="comment"># "source", "set_source", "source_ref"</span>
+    <span class="comment"># and "combine" are alternative constructors.</span>
+    <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">;</span>
+</pre>
+<pre>
+    <span class="comment"># set target hash</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">target</span><span class="operator">(</span><span class="string">a</span> <span class="operator">=&gt;</span> <span class="number">1</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">set_target</span><span class="operator">(</span><span class="string">a</span> <span class="operator">=&gt;</span> <span class="number">1</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">target_ref</span><span class="operator">(</span><span class="operator">{</span><span class="string">a</span> <span class="operator">=&gt;</span> <span class="number">1</span><span class="operator">}</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">set_target_ref</span><span class="operator">(</span><span class="operator">{</span><span class="string">a</span> <span class="operator">=&gt;</span> <span class="number">1</span><span class="operator">}</span><span class="operator">);</span>
+</pre>
+<pre>
+    <span class="comment"># get target hash (no set parameters)</span>
+    <span class="variable">$target</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">target</span><span class="operator">;</span>
+    <span class="variable">$target</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">target_ref</span><span class="operator">;</span>
+</pre>
+<pre>
+    <span class="comment"># set source hash</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">source</span><span class="operator">(</span><span class="string">b</span> <span class="operator">=&gt;</span> <span class="number">2</span><span class="operator">,</span> <span class="string">c</span> <span class="operator">=&gt;</span> <span class="number">3</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">set_source</span><span class="operator">(</span><span class="string">b</span> <span class="operator">=&gt;</span> <span class="number">2</span><span class="operator">,</span> <span class="string">c</span> <span class="operator">=&gt;</span> <span class="number">3</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">source_ref</span><span class="operator">(</span><span class="operator">{</span><span class="string">b</span> <span class="operator">=&gt;</span> <span class="number">2</span><span class="operator">,</span> <span class="string">c</span> <span class="operator">=&gt;</span> <span class="number">3</span><span class="operator">}</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">set_source_ref</span><span class="operator">(</span><span class="operator">{</span><span class="string">b</span> <span class="operator">=&gt;</span> <span class="number">2</span><span class="operator">,</span> <span class="string">c</span> <span class="operator">=&gt;</span> <span class="number">3</span><span class="operator">}</span><span class="operator">);</span>
+</pre>
+<pre>
+    <span class="comment"># get source hash (no set parameters)</span>
+    <span class="variable">$source</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">source</span><span class="operator">;</span>
+    <span class="variable">$source</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">source_ref</span><span class="operator">;</span>
+</pre>
+<pre>
+    <span class="comment"># combine - merge targets of other Hash::Map objects into $obj target</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">combine</span><span class="operator">(</span><span class="variable">@objects</span><span class="operator">);</span>
+</pre>
+<pre>
+    <span class="comment"># clone target</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">clone_target</span><span class="operator">;</span>
+</pre>
+<pre>
+    <span class="comment"># clone source</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">clone_source</span><span class="operator">;</span>
+</pre>
+<pre>
+    <span class="comment"># delete keys in target</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">delete_keys</span><span class="operator">(</span> <span class="string">qw(x y)</span> <span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">delete_keys_ref</span><span class="operator">(</span><span class="operator">[</span> <span class="string">qw(x y)</span> <span class="operator">]</span><span class="operator">);</span>
+</pre>
+<pre>
+    <span class="comment"># copy data from source to target using keys</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_keys</span><span class="operator">(</span><span class="string">qw(b c)</span><span class="operator">)</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_keys_ref</span><span class="operator">(</span><span class="operator">[</span> <span class="string">qw(b c)</span> <span class="operator">]</span><span class="operator">);</span>
+    <span class="comment"># including a key rewrite rule as code reference</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_keys</span><span class="operator">(</span>
+        <span class="string">qw(b c)</span><span class="operator">,</span>
+        <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$key</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span> <span class="string">"new </span><span class="variable">$key</span><span class="string">"</span><span class="operator">;</span>
+        <span class="operator">},</span>
+    <span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_keys_ref</span><span class="operator">(</span>
+        <span class="operator">[</span> <span class="string">qw(b c)</span> <span class="operator">]</span><span class="operator">,</span>
+        <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$key</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span> <span class="string">"new </span><span class="variable">$key</span><span class="string">"</span><span class="operator">;</span>
+        <span class="operator">},</span>
+    <span class="operator">);</span>
+</pre>
+<pre>
+    <span class="comment"># copy data from source (key of map) to target (value of map)</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">map_keys</span><span class="operator">(</span><span class="string">b</span> <span class="operator">=&gt;</span> <span class="string">'bb'</span><span class="operator">,</span> <span class="string">c</span> <span class="operator">=&gt;</span> <span class="string">'cc'</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">map_keys_ref</span><span class="operator">(</span><span class="operator">{</span><span class="string">b</span> <span class="operator">=&gt;</span> <span class="string">'bb'</span><span class="operator">,</span> <span class="string">c</span> <span class="operator">=&gt;</span> <span class="string">'cc'</span><span class="operator">}</span><span class="operator">);</span>
+</pre>
+<pre>
+    <span class="comment"># merge the given hash into target hash</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">merge_hash</span><span class="operator">(</span><span class="string">d</span> <span class="operator">=&gt;</span> <span class="number">4</span><span class="operator">,</span> <span class="string">e</span> <span class="operator">=&gt;</span> <span class="number">5</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">merge_hashref</span><span class="operator">(</span><span class="operator">{</span><span class="string">d</span> <span class="operator">=&gt;</span> <span class="number">4</span><span class="operator">,</span> <span class="string">e</span> <span class="operator">=&gt;</span> <span class="number">5</span><span class="operator">}</span><span class="operator">);</span>
+</pre>
+<pre>
+    <span class="comment"># modify target inplace by given code</span>
+    <span class="comment"># Maybe the combined methods is what you are looking for,</span>
+    <span class="comment"># see method "copy_modify_identical" or "map_modify_identical".</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">modify</span><span class="operator">(</span>
+        <span class="string">f</span> <span class="operator">=&gt;</span> <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$current_value_of_key_f_in_target</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span><span class="operator">;</span> <span class="comment"># $target{f} will be undef because of scalar context</span>
+        <span class="operator">},</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">modify_ref</span><span class="operator">(</span><span class="operator">{</span>
+        <span class="string">f</span> <span class="operator">=&gt;</span> <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span>   <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$current_value_of_key_f_in_target</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span> <span class="string">"new </span><span class="variable">$value</span><span class="string">"</span><span class="operator">;</span>
+        <span class="operator">},</span>
+        <span class="operator">...</span>
+    <span class="operator">}</span><span class="operator">);</span>
+</pre>
+<pre>
+    <span class="comment"># copy data from source to target using keys</span>
+    <span class="comment"># and then</span>
+    <span class="comment"># modify target inplace by given code</span>
+    <span class="comment"># Maybe method "copy_modify_idientical" is what you are looking for.</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_modify</span><span class="operator">(</span>
+        <span class="string">f</span> <span class="operator">=&gt;</span> <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$current_value_of_key_f_in_target</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span><span class="operator">;</span> <span class="comment"># $target{f} will be undef because of scalar context</span>
+        <span class="operator">},</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_modify_ref</span><span class="operator">(</span><span class="operator">{</span>
+        <span class="string">f</span> <span class="operator">=&gt;</span> <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span>   <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$current_value_of_key_f_in_target</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span> <span class="string">"new </span><span class="variable">$value</span><span class="string">"</span><span class="operator">;</span>
+        <span class="operator">},</span>
+        <span class="operator">...</span>
+    <span class="operator">}</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_modify_identical</span><span class="operator">(</span>
+        <span class="string">qw(b c)</span><span class="operator">,</span>
+        <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$current_value_of_each_key_in_target</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span><span class="operator">;</span> <span class="comment"># $target{key} will be undef because of scalar context</span>
+        <span class="operator">},</span>
+    <span class="operator">);</span>
+    <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_modify_identical_ref</span><span class="operator">(</span>
+        <span class="operator">[</span> <span class="string">qw(b c)</span> <span class="operator">]</span><span class="operator">,</span>
+        <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$current_value_of_each_key_in_target</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span><span class="operator">;</span> <span class="comment"># $target{key} will be undef because of scalar context</span>
+        <span class="operator">},</span>
+    <span class="operator">);</span>
+</pre>
+<pre>
+    <span class="comment"># copy data from source (key of map) to target (value of map)</span>
+    <span class="comment"># and then</span>
+    <span class="comment"># modify target inplace by given code</span>
+    <span class="comment"># Maybe method "map_modify_idientical" is what you are looking for.</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">map_modify</span><span class="operator">(</span>
+        <span class="string">f</span> <span class="operator">=&gt;</span> <span class="string">ff</span> <span class="operator">=&gt;</span> <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$current_value_of_key_f_in_source</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span><span class="operator">;</span> <span class="comment"># $target{ff} will be undef because of scalar context</span>
+        <span class="operator">},</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">map_modify_ref</span><span class="operator">(</span><span class="operator">[</span>
+        <span class="string">f</span> <span class="operator">=&gt;</span> <span class="string">ff</span> <span class="operator">=&gt;</span> <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span>   <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$current_value_of_key_f_in_source</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span> <span class="string">"new </span><span class="variable">$value</span><span class="string">"</span><span class="operator">;</span>
+        <span class="operator">},</span>
+        <span class="operator">...</span>
+    <span class="operator">]</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">map_modify_identical</span><span class="operator">(</span>
+        <span class="operator">(</span>
+            <span class="string">f</span> <span class="operator">=&gt;</span> <span class="variable">ff</span><span class="operator">,</span>
+            <span class="operator">...</span>
+        <span class="operator">),</span>
+        <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$current_value_of_each_key_in_source</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span><span class="operator">;</span> <span class="comment"># $target{key} will be undef because of scalar context</span>
+        <span class="operator">},</span>
+    <span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">map_modify_identical_ref</span><span class="operator">(</span>
+        <span class="operator">{</span>
+            <span class="string">f</span> <span class="operator">=&gt;</span> <span class="variable">ff</span><span class="operator">,</span>
+            <span class="operator">...</span>
+        <span class="operator">}</span><span class="operator">,</span>
+        <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span>   <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$current_value_of_each_key_in_source</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span> <span class="string">"new </span><span class="variable">$value</span><span class="string">"</span><span class="operator">;</span>
+        <span class="operator">},</span>
+    <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<h2><a name="automatic_construction">Automatic construction</a></h2>
+<p>Methods &quot;target&quot;, &quot;set_target&quot;, &quot;target_ref&quot;,
+&quot;source&quot;, &quot;set_source&quot;, &quot;source_ref&quot; and &quot;combine&quot;
+can work as constructor too.</p>
+<pre>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">-&gt;</span><span class="variable">target</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">-&gt;</span><span class="variable">set_target</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">-&gt;</span><span class="variable">target_ref</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">-&gt;</span><span class="variable">source</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">-&gt;</span><span class="variable">set_source</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">-&gt;</span><span class="variable">source_ref</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">-&gt;</span><span class="variable">combine</span><span class="operator">(...);</span>
+</pre>
+<p>shorter written as:</p>
+<pre>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">target</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">set_target</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">target_ref</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">source</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">set_source</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">source_ref</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">combine</span><span class="operator">(...);</span>
+</pre>
+<p>
+</p>
+<h2><a name="functional_style">Functional style</a></h2>
+<pre>
+    <span class="keyword">use</span> <span class="variable">Hash::Map</span> <span class="string">qw(hash_map hashref_map)</span><span class="operator">;</span>
+</pre>
+<pre>
+    <span class="variable">%target_hash</span> <span class="operator">=</span> <span class="variable">hash_map</span><span class="operator">(</span>
+        <span class="operator">\</span><span class="variable">%source_hash</span><span class="operator">,</span>
+        <span class="comment"># The following references are sorted anyway.</span>
+        <span class="comment"># Running in order like written.</span>
+        <span class="operator">[</span> <span class="string">qw(key1 key2)</span> <span class="operator">]</span><span class="operator">,</span>               <span class="comment"># copy_keys from source to target hash</span>
+        <span class="operator">[</span> <span class="string">qw(key3 key4)</span><span class="operator">,</span> <span class="variable">$code_ref</span> <span class="operator">]</span><span class="operator">,</span>    <span class="comment"># copy_keys, code_ref to rename keys</span>
+        <span class="operator">{</span>
+            <span class="string">source_key1</span> <span class="operator">=&gt;</span> <span class="string">'target_key'</span><span class="operator">,</span> <span class="comment"># map_keys from source to target hash</span>
+            <span class="string">source_key2</span> <span class="operator">=&gt;</span> <span class="variable">$code_ref</span><span class="operator">,</span>    <span class="comment"># modify values in target hash</span>
+        <span class="operator">}</span><span class="operator">,</span>
+    <span class="operator">);</span>
+</pre>
+<p>Similar, only the method name and return value has changed.</p>
+<pre>
+    <span class="variable">$target_hashref</span> <span class="operator">=</span> <span class="variable">hashref_map</span><span class="operator">(</span>
+        <span class="variable">$source_hashref</span><span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="example">EXAMPLE</a></h1>
+<p>Inside of this Distribution is a directory named example.
+Run this *.pl files.</p>
+<p>
+</p>
+<hr />
+<h1><a name="code_example">Code example</a></h1>
+<p>Don't be shocked about the big examples.</p>
+<p>If you have nearly 1 type of each mapping.
+Map it like before.
+Otherwise the module helps you to prevent: Don't repeat yourself.</p>
+<p>Often we read in code something like that:</p>
+<pre>
+    <span class="variable">foo</span><span class="operator">(</span>
+        <span class="string">street</span>       <span class="operator">=&gt;</span> <span class="variable">$form</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">street</span><span class="operator">}</span><span class="operator">,</span>
+        <span class="string">city</span>         <span class="operator">=&gt;</span> <span class="variable">$form</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">city</span><span class="operator">}</span><span class="operator">,</span>
+        <span class="string">country_code</span> <span class="operator">=&gt;</span> <span class="variable">$form</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">country_code</span><span class="operator">}</span> <span class="keyword">eq</span> <span class="string">'D'</span>
+                        <span class="operator">?</span> <span class="string">'DE'</span>
+                        <span class="operator">:</span> <span class="variable">$form</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">country_code</span><span class="operator">}</span><span class="operator">,</span>
+        <span class="string">zip_code</span>     <span class="operator">=&gt;</span> <span class="variable">$form</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">zip</span><span class="operator">}</span><span class="operator">,</span>
+        <span class="string">name</span>         <span class="operator">=&gt;</span> <span class="string">"</span><span class="variable">$form</span><span class="string">-&gt;{first_name} </span><span class="variable">$form</span><span class="string">-&gt;{family_name}"</span><span class="operator">,</span>
+        <span class="string">account</span>      <span class="operator">=&gt;</span> <span class="variable">$bar</span><span class="operator">-&gt;</span><span class="variable">get_account</span><span class="operator">,</span>
+        <span class="string">mail_name</span>    <span class="operator">=&gt;</span> <span class="variable">$mail</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">name</span><span class="operator">}</span><span class="operator">,</span>
+        <span class="string">mail_address</span> <span class="operator">=&gt;</span> <span class="variable">$mail</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">address</span><span class="operator">}</span><span class="operator">,</span>
+    <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<h2><a name="oo_interface">OO interface</a></h2>
+<p>Now we can write:</p>
+<pre>
+    <span class="variable">foo</span><span class="operator">(</span>
+        <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">combine</span><span class="operator">(</span>
+            <span class="variable">Hash::Map</span>
+                <span class="operator">-&gt;</span><span class="variable">source_ref</span><span class="operator">(</span><span class="variable">$form</span><span class="operator">)</span>
+                <span class="operator">-&gt;</span><span class="variable">copy_keys</span><span class="operator">(</span>
+                    <span class="string">qw(street city)</span>
+                <span class="operator">)</span>
+                <span class="operator">-&gt;</span><span class="variable">copy_modify</span><span class="operator">(</span>
+                    <span class="string">country_code</span> <span class="operator">=&gt;</span> <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+                        <span class="keyword">return</span> <span class="variable">$_</span> <span class="keyword">eq</span> <span class="string">'D'</span> <span class="operator">?</span> <span class="string">'DE'</span> <span class="operator">:</span> <span class="variable">$_</span><span class="operator">;</span>
+                    <span class="operator">},</span>
+                <span class="operator">)</span>
+                <span class="operator">-&gt;</span><span class="variable">map_keys</span><span class="operator">(</span>
+                    <span class="string">zip</span> <span class="operator">=&gt;</span> <span class="string">'zip_code'</span><span class="operator">,</span>
+                <span class="operator">)</span>
+                <span class="operator">-&gt;</span><span class="variable">merge_hash</span><span class="operator">(</span>
+                    <span class="string">name</span> <span class="operator">=&gt;</span> <span class="string">"</span><span class="variable">$form</span><span class="string">-&gt;{first_name} </span><span class="variable">$form</span><span class="string">-&gt;{family_name}"</span><span class="operator">,</span>
+                <span class="operator">),</span>
+            <span class="variable">Hash::Map</span>
+                <span class="operator">-&gt;</span><span class="variable">source_ref</span><span class="operator">(</span><span class="variable">$bar</span><span class="operator">)</span>
+                <span class="operator">-&gt;</span><span class="variable">copy_modify</span><span class="operator">(</span>
+                    <span class="string">account</span> <span class="operator">=&gt;</span> <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+                        <span class="keyword">return</span> <span class="variable">$_</span><span class="operator">-&gt;</span><span class="variable">get_account</span><span class="operator">;</span>
+                    <span class="operator">},</span>
+                <span class="operator">),</span>
+            <span class="variable">Hash::Map</span>
+                <span class="operator">-&gt;</span><span class="variable">source_ref</span><span class="operator">(</span><span class="variable">$mail</span><span class="operator">)</span>
+                <span class="operator">-&gt;</span><span class="variable">copy_keys</span><span class="operator">(</span>
+                    <span class="string">qw(name address)</span><span class="operator">,</span>
+                    <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+                        <span class="keyword">return</span> <span class="string">"mail_</span><span class="variable">$_</span><span class="string">"</span><span class="operator">;</span>
+                    <span class="operator">},</span>
+                <span class="operator">),</span>
+        <span class="operator">)-&gt;</span><span class="variable">target</span>
+    <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<h2><a name="functional_interface">Functional interface</a></h2>
+<p>Now we can write:</p>
+<pre>
+    <span class="variable">foo</span><span class="operator">(</span>
+        <span class="variable">hash_map</span><span class="operator">(</span>
+            <span class="comment"># source_ref,</span>
+            <span class="variable">$form</span><span class="operator">,</span>
+            <span class="comment"># copy_keys</span>
+            <span class="operator">[</span> <span class="string">qw(street city country_code)</span> <span class="operator">]</span><span class="operator">,</span>
+            <span class="operator">{</span>
+                <span class="comment"># modify</span>
+                <span class="string">country_code</span> <span class="operator">=&gt;</span> <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+                    <span class="keyword">return</span> <span class="variable">$_</span> <span class="keyword">eq</span> <span class="string">'D'</span> <span class="operator">?</span> <span class="string">'DE'</span> <span class="operator">:</span> <span class="variable">$_</span><span class="operator">;</span>
+                <span class="operator">},</span>
+                <span class="comment"># map_keys</span>
+                <span class="string">zip</span> <span class="operator">=&gt;</span> <span class="string">'zip_code'</span><span class="operator">,</span>
+            <span class="operator">}</span><span class="operator">,</span>
+        <span class="operator">),</span>
+        <span class="comment"># merge_hash</span>
+        <span class="string">name</span> <span class="operator">=&gt;</span> <span class="string">"</span><span class="variable">$form</span><span class="string">-&gt;{first_name} </span><span class="variable">$form</span><span class="string">-&gt;{family_name}"</span><span class="operator">,</span>
+        <span class="variable">hash_map</span><span class="operator">(</span>
+            <span class="variable">$bar</span><span class="operator">,</span>
+            <span class="comment"># copy_keys</span>
+            <span class="operator">[</span> <span class="string">qw(account)</span> <span class="operator">]</span><span class="operator">,</span>
+            <span class="operator">{</span>
+                <span class="comment"># modify</span>
+                <span class="string">account</span> <span class="operator">=&gt;</span> <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+                    <span class="keyword">return</span> <span class="variable">$_</span><span class="operator">-&gt;</span><span class="variable">get_account</span><span class="operator">;</span>
+                <span class="operator">},</span>
+            <span class="operator">}</span><span class="operator">,</span>
+        <span class="operator">),</span>
+        <span class="variable">hash_map</span><span class="operator">(</span>
+            <span class="variable">$mail</span><span class="operator">,</span>
+            <span class="operator">[</span>
+                <span class="comment"># copy_keys</span>
+                <span class="string">qw(name address)</span><span class="operator">,</span>
+                <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+                    <span class="keyword">return</span> <span class="string">"mail_</span><span class="variable">$_</span><span class="string">"</span><span class="operator">;</span>
+                <span class="operator">},</span>
+            <span class="operator">]</span><span class="operator">,</span>
+        <span class="operator">),</span>
+    <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>For array manipulation we have map, for hashes not really.
+This was the reason to create this module.</p>
+<p>The fuctional interface is wrapped around the OO inferface.
+Not all can be implemented functional.</p>
+<p>
+</p>
+<hr />
+<h1><a name="subroutines_methods">SUBROUTINES/METHODS</a></h1>
+<p>The methods are existing as normal name and with postfix &quot;_ref&quot;.
+The idea is that user code should be clear and free of noise like:</p>
+<pre>
+    <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">name_ref</span><span class="operator">(</span> <span class="variable">$hashref</span> <span class="operator">)</span>
+    <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">name</span><span class="operator">(</span> <span class="variable">%hash</span> <span class="operator">)</span>
+    <span class="comment"># instaed of</span>
+    <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">name</span><span class="operator">(</span> <span class="variable">%</span><span class="operator">{</span><span class="variable">$hashref</span><span class="operator">}</span> <span class="operator">)</span>
+    <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">name_ref</span><span class="operator">(</span> <span class="operator">\</span><span class="variable">%hash</span> <span class="operator">)</span>
+</pre>
+<pre>
+    <span class="variable">%hash</span>     <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">target</span><span class="operator">;</span>
+    <span class="variable">$hash_ref</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">target_ref</span><span class="operator">;</span>
+    <span class="comment"># instead of</span>
+    <span class="variable">%hash</span>     <span class="operator">=</span> <span class="variable">%</span><span class="operator">{</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">target_ref</span> <span class="operator">}</span><span class="operator">;</span>
+    <span class="variable">$hash_ref</span> <span class="operator">=</span> <span class="operator">{</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">target</span> <span class="operator">}</span><span class="operator">;</span>
+</pre>
+<p>
+</p>
+<h2><a name="method_new">method new</a></h2>
+<p>A simple constructor without any parameters.</p>
+<pre>
+    <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">;</span>
+</pre>
+<p>Typical you don't call method &quot;new&quot; directly.</p>
+<p>
+</p>
+<h2><a name="method_target__target_ref__set_target_and_set_target_ref">method target, target_ref, set_target and set_target_ref</a></h2>
+<p>Set or get the target hash.</p>
+<p>Method &quot;target&quot; can not set an empty hash, but this is the default.
+Otherwise use method &quot;set_target&quot;.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">target</span><span class="operator">(</span><span class="variable">%target</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">target_ref</span><span class="operator">(</span><span class="variable">$target_hashref</span><span class="operator">);</span>
+</pre>
+<pre>
+    <span class="comment"># if %target is or can be empty</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">set_target</span><span class="operator">(</span><span class="variable">%target</span><span class="operator">);</span>
+    <span class="comment"># method exists for the sake of completeness</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">set_target_ref</span><span class="operator">(</span><span class="variable">$target_ref</span><span class="operator">);</span>
+</pre>
+<pre>
+    <span class="variable">%target</span>         <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">target</span><span class="operator">;</span>
+    <span class="variable">$target_hashref</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">target_ref</span><span class="operator">;</span>
+</pre>
+<p>This methods are able to construct the object first.</p>
+<pre>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">target</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">target_ref</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">set_target</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">set_target_ref</span><span class="operator">(...);</span>
+</pre>
+<p>Typical the source is set and not the target.
+But it makes no sense to set the source
+and copy then all from source.</p>
+<p>
+</p>
+<h2><a name="method_source__source_ref__set_source_and_set_source_ref">method source, source_ref, set_source and set_source_ref</a></h2>
+<p>Set or get the source hash.</p>
+<p>Method &quot;source&quot; can not set an empty hash, but this is the default.
+Otherwise use method &quot;set_source&quot;.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">source</span><span class="operator">(</span><span class="variable">%source</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">source_ref</span><span class="operator">(</span><span class="variable">$source_hashref</span><span class="operator">);</span>
+    <span class="comment"># if %source is or can be empty</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">set_source</span><span class="operator">(</span><span class="variable">%source</span><span class="operator">);</span>
+    <span class="comment"># method exists for the sake of completeness</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">set_source_ref</span><span class="operator">(</span><span class="variable">$target_ref</span><span class="operator">);</span>
+</pre>
+<pre>
+    <span class="variable">%source</span>         <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">source</span><span class="operator">;</span>
+    <span class="variable">$source_hashref</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">source_ref</span><span class="operator">;</span>
+</pre>
+<p>This methods are able to construct the object first.</p>
+<pre>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">source</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">source_ref</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">set_source</span><span class="operator">(...);</span>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">set_source_ref</span><span class="operator">(...);</span>
+</pre>
+<p>
+</p>
+<h2><a name="method_combine">method combine</a></h2>
+<p>Merge targets of other Hash::Map objects into $obj target.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">combine</span><span class="operator">(</span><span class="variable">@objects</span><span class="operator">);</span>
+</pre>
+<p>This method is able to construct the object first.</p>
+<pre>
+    <span class="variable">Hash::Map</span><span class="operator">-&gt;</span><span class="variable">combine</span><span class="operator">(...);</span>
+</pre>
+<p>Typical used for clear code to prevent the change of the source hash/hashref.</p>
+<p>
+</p>
+<h2><a name="method_clone_target">method clone_target</a></h2>
+<p>Using Module Clone to clone the target hash.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">clone_target</span><span class="operator">;</span>
+</pre>
+<p>Only used after set of target hash reference
+to prevent manpulations backwards.</p>
+<p>
+</p>
+<h2><a name="method_clone_source">method clone_source</a></h2>
+<p>Using Module Clone to clone the source hash.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">clone_source</span><span class="operator">;</span>
+</pre>
+<p>This method exists for the sake of completeness.</p>
+<p>
+</p>
+<h2><a name="method_delete_keys_and_delete_keys_ref">method delete_keys and delete_keys_ref</a></h2>
+<p>Delete keys in target hash.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">delete_keys</span><span class="operator">(</span><span class="variable">@keys</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">delete_keys_ref</span><span class="operator">(</span><span class="variable">$keys_array_ref</span><span class="operator">);</span>
+</pre>
+<p>
+</p>
+<h2><a name="method_copy_keys_and_copy_keys_ref">method copy_keys and copy_keys_ref</a></h2>
+<p>Copy data from source to target hash using keys.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_keys</span><span class="operator">(</span><span class="variable">@keys</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_keys_ref</span><span class="operator">(</span><span class="variable">$keys_array_ref</span><span class="operator">);</span>
+</pre>
+<p>And rename all keys during copy.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_keys</span><span class="operator">(</span>
+        <span class="variable">@keys</span><span class="operator">,</span>
+        <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$key</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span> <span class="string">"new </span><span class="variable">$key</span><span class="string">"</span><span class="operator">;</span>
+        <span class="operator">},</span>
+    <span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_keys_ref</span><span class="operator">(</span>
+        <span class="variable">$keys_array_ref</span><span class="operator">,</span>
+        <span class="keyword">sub</span><span class="variable"> </span><span class="operator">{</span>
+            <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="keyword">shift</span><span class="operator">;</span>
+            <span class="keyword">my</span> <span class="variable">$key</span> <span class="operator">=</span> <span class="variable">$_</span><span class="operator">;</span>
+            <span class="keyword">return</span> <span class="string">"new </span><span class="variable">$key</span><span class="string">"</span><span class="operator">;</span>
+        <span class="operator">},</span>
+    <span class="operator">);</span>
+</pre>
+<p>The first parameter of the callback subroutine is the object itself.
+The current key is in $_.
+Return the new key.</p>
+<p>Replaces code like this:</p>
+<pre>
+    <span class="variable">%target</span> <span class="operator">=</span> <span class="operator">(</span>
+        <span class="string">a</span> <span class="operator">=&gt;</span> <span class="variable">$source</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">a</span><span class="operator">}</span><span class="operator">,</span>
+        <span class="string">b</span> <span class="operator">=&gt;</span> <span class="variable">$source</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">b</span><span class="operator">}</span><span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+    <span class="variable">%target</span> <span class="operator">=</span> <span class="operator">(</span>
+        <span class="string">p_a</span> <span class="operator">=&gt;</span> <span class="variable">$source</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">a</span><span class="operator">}</span><span class="operator">,</span>
+        <span class="string">p_b</span> <span class="operator">=&gt;</span> <span class="variable">$source</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">b</span><span class="operator">}</span><span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<h2><a name="method_map_keys_and_map_keys_ref">method map_keys and map_keys_ref</a></h2>
+<p>Copy data from source hash (key is key of map)
+to target hash (key is value of map).</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">map_keys</span><span class="operator">(</span><span class="variable">%map</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">map_keys_ref</span><span class="operator">(</span><span class="variable">$map_hashref</span><span class="operator">);</span>
+</pre>
+<p>Replaces code like this:</p>
+<pre>
+    <span class="variable">%target</span> <span class="operator">=</span> <span class="operator">(</span>
+        <span class="string">a</span> <span class="operator">=&gt;</span> <span class="variable">$source</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">z</span><span class="operator">}</span><span class="operator">,</span>
+        <span class="string">b</span> <span class="operator">=&gt;</span> <span class="variable">$source</span><span class="operator">-&gt;</span><span class="operator">{</span><span class="string">y</span><span class="operator">}</span><span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<h2><a name="method_merge_hash_and_merge_hashref">method merge_hash and merge_hashref</a></h2>
+<p>Merge the given hash into the target hash.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">merge_hash</span><span class="operator">(</span><span class="variable">%hash</span><span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">merge_hashref</span><span class="operator">(</span><span class="variable">$hashref</span><span class="operator">);</span>
+</pre>
+<p>Replaces code like this:</p>
+<pre>
+    <span class="variable">%target</span> <span class="operator">=</span> <span class="operator">(</span>
+        <span class="variable">%hash</span><span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<h2><a name="method_modify_and_modify_ref">method modify and modify_ref</a></h2>
+<p>Modify the target hash inplace by given key and code for that.</p>
+<p>The first parameter of the callback subroutine is the object itself.
+The old value of the target hash is in $_;
+Return the new value.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">modify</span><span class="operator">(</span>
+        <span class="string">key1</span> <span class="operator">=&gt;</span> <span class="variable">$code_ref1</span><span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">modify_ref</span><span class="operator">(</span><span class="operator">{</span>
+        <span class="string">key1</span> <span class="operator">=&gt;</span> <span class="variable">$code_ref1</span><span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">}</span><span class="operator">);</span>
+</pre>
+<p>Typical the combinated methods are used:
+&quot;copy_modify&quot;,
+&quot;copy_modify_ref&quot;,
+&quot;copy_modify_identical&quot;,
+&quot;copy_modify_identical_ref&quot;,
+&quot;map_modify&quot;,
+&quot;map_modify_ref&quot;,
+&quot;map_modify_identical&quot; and
+&quot;map_modify_identical_ref&quot;.</p>
+<p>
+</p>
+<h2><a name="method_copy_modify_and_copy_modify_ref">method copy_modify and copy_modify_ref</a></h2>
+<p>This is a combination of method &quot;copy_keys&quot; and &quot;modify&quot;.</p>
+<p>The first parameter of the callback subroutine is the object itself.
+The old value of the target hash is in $_;
+Return the new value.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_modify</span><span class="operator">(</span>
+        <span class="string">key1</span> <span class="operator">=&gt;</span> <span class="variable">$code_ref1</span><span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_modify_ref</span><span class="operator">(</span><span class="operator">{</span>
+        <span class="string">key1</span> <span class="operator">=&gt;</span> <span class="variable">$code_ref1</span><span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">}</span><span class="operator">);</span>
+</pre>
+<p>It is not possible to rename all keys during copy.
+Use method &quot;map_modify&quot; or &quot;map_modify_ref&quot; instead.</p>
+<p>This method exists for the sake of completeness.</p>
+<p>
+</p>
+<h2><a name="method_copy_modify_identical_and_copy_modify_identical_ref">method copy_modify_identical and copy_modify_identical_ref</a></h2>
+<p>This is another combination of method &quot;copy_keys&quot; and &quot;modify&quot;.
+All values are modified using a common code reference.</p>
+<p>The 1st parameter of the callback subroutine is the object itself.
+The 2nd parameter is the key.
+The old value of the target hash is in $_;
+Return the new value.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_modify_identical</span><span class="operator">(</span>
+        <span class="variable">@keys</span><span class="operator">,</span>
+        <span class="variable">$code_ref</span><span class="operator">,</span>
+    <span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">copy_modify_identical_ref</span><span class="operator">(</span>
+        <span class="variable">$keys_array_ref</span><span class="operator">,</span>
+        <span class="variable">$code_ref</span><span class="operator">,</span>
+    <span class="operator">);</span>
+</pre>
+<p>It is not possible to rename all keys during copy.
+Use method &quot;map_modify_identical&quot; or &quot;map_modify_identical&quot; instead.</p>
+<p>Replaces code like this:</p>
+<pre>
+    <span class="variable">%target</span> <span class="operator">=</span> <span class="operator">(</span>
+        <span class="string">a</span> <span class="operator">=&gt;</span> <span class="variable">$foo</span><span class="operator">-&gt;</span><span class="variable">bar</span><span class="operator">(</span><span class="string">'a'</span><span class="operator">),</span>
+        <span class="string">b</span> <span class="operator">=&gt;</span> <span class="variable">$foo</span><span class="operator">-&gt;</span><span class="variable">bar</span><span class="operator">(</span><span class="string">'b'</span><span class="operator">),</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+    <span class="variable">%target</span> <span class="operator">=</span> <span class="operator">(</span>
+        <span class="string">a</span> <span class="operator">=&gt;</span> <span class="variable">$foo</span><span class="operator">-&gt;</span>a<span class="operator">,</span>
+        <span class="string">b</span> <span class="operator">=&gt;</span> <span class="variable">$foo</span><span class="operator">-&gt;</span>b<span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<h2><a name="method_map_modify_and_map_modify_ref">method map_modify and map_modify_ref</a></h2>
+<p>This is a combination of method &quot;map_keys&quot; and &quot;modify&quot;.</p>
+<p>The first parameter of the callback subroutine is the object itself.
+The old value of the target hash is in $_;
+Return the new value.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">map_modify</span><span class="operator">(</span>
+        <span class="string">source_key1</span> <span class="operator">=&gt;</span> <span class="string">target_key1</span> <span class="operator">=&gt;</span> <span class="variable">$code_ref1</span><span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">map_modify_ref</span><span class="operator">(</span><span class="operator">[</span>
+        <span class="string">source_key1</span> <span class="operator">=&gt;</span> <span class="string">target_key1</span> <span class="operator">=&gt;</span> <span class="variable">$code_ref1</span><span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">]</span><span class="operator">);</span>
+</pre>
+<p>This method exists for the sake of completeness.</p>
+<p>
+</p>
+<h2><a name="method_map_modify_identical_and_map_modify_identical_ref">method map_modify_identical and map_modify_identical_ref</a></h2>
+<p>This is a combination of method &quot;map_keys&quot; and &quot;modify&quot;.</p>
+<p>The 1st parameter of the callback subroutine is the object itself.
+The 2nd parameter is the source key and the 3rd parameter is the target key.
+The old value of the target hash is in $_;
+Return the new value.</p>
+<pre>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">map_modify_identical</span><span class="operator">(</span>
+        <span class="string">source_key1</span> <span class="operator">=&gt;</span> <span class="variable">target_key1</span><span class="operator">,</span>
+        <span class="operator">...</span>
+        <span class="variable">$code_ref</span><span class="operator">,</span>
+    <span class="operator">);</span>
+    <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">map_modify_identical_ref</span><span class="operator">(</span>
+        <span class="operator">{</span>
+            <span class="string">source_key1</span> <span class="operator">=&gt;</span> <span class="variable">target_key1</span><span class="operator">,</span>
+            <span class="operator">...</span>
+        <span class="operator">}</span><span class="operator">,</span>
+        <span class="variable">$code_ref</span><span class="operator">,</span>
+    <span class="operator">);</span>
+</pre>
+<p>Replaces code like this:</p>
+<pre>
+    <span class="variable">%target</span> <span class="operator">=</span> <span class="operator">(</span>
+        <span class="string">a</span> <span class="operator">=&gt;</span> <span class="variable">$foo</span><span class="operator">-&gt;</span><span class="variable">bar</span><span class="operator">(</span><span class="string">'z'</span><span class="operator">),</span>
+        <span class="string">b</span> <span class="operator">=&gt;</span> <span class="variable">$foo</span><span class="operator">-&gt;</span><span class="variable">bar</span><span class="operator">(</span><span class="string">'y'</span><span class="operator">),</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+    <span class="variable">%target</span> <span class="operator">=</span> <span class="operator">(</span>
+        <span class="string">a</span> <span class="operator">=&gt;</span> <span class="variable">$foo</span><span class="operator">-&gt;</span>z<span class="operator">,</span>
+        <span class="string">b</span> <span class="operator">=&gt;</span> <span class="variable">$foo</span><span class="operator">-&gt;</span>y<span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<h2><a name="subroutine_hash_map">subroutine hash_map</a></h2>
+<p>This subroutine is for the fuctional interface only.</p>
+<pre>
+    <span class="variable">%target_hash</span> <span class="operator">=</span> <span class="variable">hash_map</span><span class="operator">(</span>
+        <span class="operator">\</span><span class="variable">%source_hash</span><span class="operator">,</span>
+        <span class="comment"># The following references are sorted anyway.</span>
+        <span class="comment"># Running in order like written.</span>
+        <span class="operator">[</span> <span class="string">qw(key1 key2)</span> <span class="operator">]</span><span class="operator">,</span>               <span class="comment"># copy_keys from source to target hash</span>
+        <span class="operator">[</span> <span class="string">qw(key3 key4)</span><span class="operator">,</span> <span class="variable">$code_ref</span> <span class="operator">]</span><span class="operator">,</span>    <span class="comment"># copy_keys, code_ref to rename keys</span>
+        <span class="operator">{</span>
+            <span class="string">source_key1</span> <span class="operator">=&gt;</span> <span class="string">'target_key'</span><span class="operator">,</span> <span class="comment"># map_keys from source to target hash</span>
+            <span class="string">source_key2</span> <span class="operator">=&gt;</span> <span class="variable">$code_ref</span><span class="operator">,</span>    <span class="comment"># modify values in target hash</span>
+        <span class="operator">}</span><span class="operator">,</span>
+    <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<h2><a name="subroutine_hashref_map">subroutine hashref_map</a></h2>
+<p>Similar, only the subroutine name and the return value has chenged.</p>
+<pre>
+    <span class="variable">$target_hashref</span> <span class="operator">=</span> <span class="variable">hashref_map</span><span class="operator">(</span>
+        <span class="variable">$source_hashref</span><span class="operator">,</span>
+        <span class="operator">...</span>
+    <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="diagnostics">DIAGNOSTICS</a></h1>
+<p>nothing</p>
+<p>
+</p>
+<hr />
+<h1><a name="configuration_and_environment">CONFIGURATION AND ENVIRONMENT</a></h1>
+<p>nothing</p>
+<p>
+</p>
+<hr />
+<h1><a name="dependencies">DEPENDENCIES</a></h1>
+<p><a href="../../../lib/Carp.html">Carp</a></p>
+<p><a href="../../../lib/Clone.html">Clone</a></p>
+<p><a href="../../../site/lib/Perl6/Export/Attrs.html">Perl6::Export::Attrs</a></p>
+<p><a href="../../../lib/Scalar/Util.html">Scalar::Util</a></p>
+<p><a href="../../../lib/Try/Tiny.html">Try::Tiny</a></p>
+<p>
+</p>
+<hr />
+<h1><a name="incompatibilities">INCOMPATIBILITIES</a></h1>
+<p>none</p>
+<p>
+</p>
+<hr />
+<h1><a name="bugs_and_limitations">BUGS AND LIMITATIONS</a></h1>
+<p>none</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p>map</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Steffen Winkler</p>
+<p>inspired by: Andreas Specht <code>&lt;ACID@cpan.org&gt;</code></p>
+<p>
+</p>
+<hr />
+<h1><a name="license_and_copyright">LICENSE AND COPYRIGHT</a></h1>
+<p>Copyright (c) 2012,
+Steffen Winkler
+<code>&lt;steffenw at cpan.org&gt;</code>.
+All rights reserved.</p>
+<p>This module is free software;
+you can redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+
+</body>
+
+</html>
