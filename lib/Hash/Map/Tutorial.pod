@@ -1,4 +1,4 @@
-=head1 Hash::Map tutorial
+=head1 Hash::Map::Tutorial
 
 =head2 Hint
 
