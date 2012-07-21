@@ -1,10 +1,9 @@
-Build.PL
 Changes
 example/01_oo_style.pl
 example/02_functional_style.pl
 lib/Hash/Map.pm
+lib/Hash/Map/tutorial.pod
 MANIFEST			This list of files
-Map.html
 README
 t/01_oo_style.t
 t/02_functional_style.t
