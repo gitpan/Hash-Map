@@ -16,7 +16,7 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Test::Differences" : 0,
+            "Test::Differences" : "0.60",
             "Test::More" : 0,
             "Test::NoWarnings" : "1.03"
          }
@@ -45,7 +45,7 @@
    "provides" : {
       "Hash::Map" : {
          "file" : "lib/Hash/Map.pm",
-         "version" : "0.012"
+         "version" : "0.013"
       }
    },
    "release_status" : "stable",
@@ -54,5 +54,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.012"
+   "version" : "0.013"
 }

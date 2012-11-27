@@ -10,7 +10,7 @@ WriteMakefile
                    'Clone' => 0,
                    'Perl6::Export::Attrs' => 0,
                    'Scalar::Util' => 0,
-                   'Test::Differences' => 0,
+                   'Test::Differences' => '0.60',
                    'Test::More' => 0,
                    'Test::NoWarnings' => '1.03',
                    'Try::Tiny' => 0,
